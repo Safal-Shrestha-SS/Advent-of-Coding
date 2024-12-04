@@ -1,7 +1,7 @@
 name: advent_of_coding
 description: Advent of coding challenge
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/Safal-Shrestha-SS/Advent-of-Coding
 
 environment:
   sdk: ^3.5.3
