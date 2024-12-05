@@ -56,7 +56,7 @@ void main() {
         break;
       }
       if ((report[i] - report[i + 1]).abs() > 3) {
-        print('more than 3'+ '$report  with values ${report[i] - report[i + 1]} and ${report[i + 1]}');
+        print('more than 3''$report  with values ${report[i] - report[i + 1]} and ${report[i + 1]}');
         isSafe = false;
         break;
       }

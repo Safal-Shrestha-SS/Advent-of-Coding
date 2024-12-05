@@ -38,6 +38,8 @@ import '../../file_reader.dart';
 // Take a look at the little Elf's word search. How many times does XMAS appear?
 void main() {
   var listOfString = readFile('lib/days/4/day_4_1.txt');
+
+  Stopwatch stopwatch =  Stopwatch()..start();
   var sum = 0;
   var valueToFind = 'XMAS';
   var rowCount = listOfString[0].length;
@@ -66,7 +68,7 @@ void main() {
       if (functoFindDiagonalDownRight(matrix, i, j, valueToFind)) {
         sum++;
       }
-      if (FunctoFindDiagonalUpRight(matrix, i, j, valueToFind)) {
+      if (functoFindDiagonalUpRight(matrix, i, j, valueToFind)) {
         sum++;
       }
       if (funcToFindDiagonalDownnLeft(matrix, i, j, valueToFind)) {
@@ -77,7 +79,8 @@ void main() {
       }
     }
   }
-
+  stopwatch.stop();
+  print(stopwatch.elapsed);
   print(sum);
 }
 
@@ -105,7 +108,7 @@ bool functoFindDiagonalDownRight(
   return false;
 }
 
-bool FunctoFindDiagonalUpRight(
+bool functoFindDiagonalUpRight(
     List<List<String>> matrix, int row, int col, String valueToFind) {
   var foundIndex = 0;
   for (var i = 0; i <= 4; i++) {
