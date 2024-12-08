@@ -1,20 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:advent_of_coding/file_reader.dart';
+import 'package:dart_console/dart_console.dart';
 
 List<XYpoint> possiblePaths = [];
-Set<XYpointWithDirection> stuckPaths = {};
-void main() async {
-  var listOfString = readFile('lib/days/6/day_6_2.txt');
 
-  Set<XYpoint> obsPoint = {};
+void printMatrix(List<List<String>> matrix) {
+  Console().clearScreen();
+  for (var i = 0; i < matrix.length; i++) {
+    print(matrix[i]);
+  }
+}
+
+void main() async {
+  var listOfString = readFile('lib/days/6/day_6_1.txt');
+
   List<List<String>> matrix = [];
   List<List<String>> countMatrix = [];
   var positionIntX = 0;
   var positionIntY = 0;
   String direction = '';
   int ggg = 0;
+  int noOfObstacles = 0;
   for (var i = 0; i < listOfString.length; i++) {
     matrix.add(listOfString[i].split(''));
+    noOfObstacles = noOfObstacles +
+        listOfString[i].split('').where((element) => element == '#').length;
     if (listOfString[i].contains('v')) {
       positionIntY = i;
       positionIntX = listOfString[i].indexOf('v');
@@ -36,25 +46,26 @@ void main() async {
       direction = '^';
     }
   }
-
-  var getMaxLoopValue =
-      getDistinctPosition(direction, positionIntX, positionIntY, [...matrix]);
-  for (var i = 0; i < possiblePaths.length; i++) {
+  List<List<String>> temp = deepCopy(matrix);
+  getDistinctPosition(direction, positionIntX, positionIntY, deepCopy(temp));
+  for (var i = 1; i < possiblePaths.length; i++) {
     countMatrix.clear();
-    countMatrix = [...matrix];
-    countMatrix[possiblePaths[i].y][possiblePaths[i].x] = '#';
-    var stuck = isStuck(direction, possiblePaths[i].x, possiblePaths[i].y,
-        countMatrix, getMaxLoopValue);
+    countMatrix = deepCopy(temp);
+    if (countMatrix[possiblePaths[i].y][possiblePaths[i].x] != direction) {
+      countMatrix[possiblePaths[i].y][possiblePaths[i].x] = '#';
+    }
+    var stuck = isStuck(direction, positionIntX, positionIntY,
+        deepCopy(countMatrix), noOfObstacles);
+    print(i);
     if (stuck) {
       ggg++;
-      // obsPoint.add(XYpoint(possiblePaths[i].x, possiblePaths[i].y));
     }
   }
   print(ggg);
 }
 
 bool isStuck(String startDirection, int posX, int posY,
-    List<List<String>> matrix, int loopCount) {
+    List<List<String>> matrix, int noOfObstacles) {
   var positionIntX = posX;
   var positionIntY = posY;
   String direction = startDirection;
@@ -64,7 +75,18 @@ bool isStuck(String startDirection, int posX, int posY,
   Set<XYpoint> a = {};
   a.add(XYpoint(positionIntX, positionIntY));
   Set<XYpointWithDirection> b = {};
+  b.add(XYpointWithDirection(positionIntX, positionIntY, direction));
+  var addObstacle = false;
+  int obstacleCount = 0;
+  obstacleCount = matrix
+      .map((e) => e.where((element) => element == '#').length)
+      .reduce((value, element) => value + element);
+  if (obstacleCount == noOfObstacles) {
+    addObstacle = true;
+  }
+  var loopCount = 0;
   while (true) {
+    // printMatrix(matrix);
     var newPosX = 0;
     var newPosY = 0;
     var newDirection = '';
@@ -86,28 +108,24 @@ bool isStuck(String startDirection, int posX, int posY,
       newDirection = '>';
     }
     try {
-      if (matrix[newPosY][newPosX] == '#' || matrix[newPosY][newPosX] == '0') {
+      if (matrix[newPosY][newPosX] == '#') {
         direction = newDirection;
-        // if (b.contains(
-        //     XYpointWithDirection(positionIntX, positionIntY, direction))) {
-        //   stuck = true;
-        //   break;
-        // }
-        // b.add(XYpointWithDirection(positionIntX, positionIntY, direction));
+        matrix[positionIntY][positionIntX] = direction;
       } else {
+        if (direction == matrix[newPosY][newPosX]) {
+          stuck = true;
+          break;
+        }
         positionIntX = newPosX;
         positionIntY = newPosY;
         if (b.contains(
             XYpointWithDirection(positionIntX, positionIntY, direction))) {
           stuck = true;
+
           break;
         }
         b.add(XYpointWithDirection(positionIntX, positionIntY, direction));
-        if (matrix[positionIntY][positionIntX] != 'X') {
-          a.add(XYpoint(positionIntX, positionIntY));
-          matrix[positionIntY][positionIntX] = 'X';
-        }
-
+        matrix[positionIntY][positionIntX] = direction;
         if (positionIntX >= horizontalLengeth ||
             positionIntX < 0 ||
             positionIntY >= verticalLength ||
@@ -118,14 +136,13 @@ bool isStuck(String startDirection, int posX, int posY,
         }
       }
     } catch (_) {
-      if (b.contains(
-          XYpointWithDirection(positionIntX, positionIntY, direction))) {
-        stuck = true;
-        break;
-      }
-      b.add(XYpointWithDirection(positionIntX, positionIntY, direction));
       break;
     }
+    if (addObstacle && loopCount == 1) {
+      matrix[positionIntY][positionIntX] = '#';
+      addObstacle = false;
+    }
+    loopCount++;
   }
 
   return stuck;
@@ -230,4 +247,8 @@ class XYpointWithDirection {
 
   @override
   int get hashCode => x.hashCode ^ y.hashCode ^ direction.hashCode;
+}
+
+List<List<String>> deepCopy(List<List<String>> original) {
+  return original.map((innerList) => List<String>.from(innerList)).toList();
 }
