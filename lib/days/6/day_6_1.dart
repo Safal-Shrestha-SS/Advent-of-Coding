@@ -1,6 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-
 import 'package:dart_console/dart_console.dart';
 
 import 'package:advent_of_coding/file_reader.dart';
@@ -159,14 +157,6 @@ void main() async {
           a.add(XYpoint(positionIntX, positionIntY));
           matrix[positionIntY][positionIntX] = 'X';
         }
-
-        // throttler.run(() => drawMatrix(
-        //       matrix,
-        //       positionIntX,
-        //       positionIntY,
-        //       direction,
-        //     ));
-
         if (positionIntX >= horizontalLengeth ||
             positionIntX < 0 ||
             positionIntY >= verticalLength ||
@@ -179,77 +169,20 @@ void main() async {
     } catch (_) {
       break;
     }
-
-    // print('positionIntX: $positionIntX, positionIntY: $positionIntY, direction: $direction and sum: $sum');
-    // printMatrix(matrix);
-    // print(sum);
   }
   print(
       'positionIntX: $positionIntX, positionIntY: $positionIntY, direction: $direction ');
   print(a.length);
-  // drawMatrix(matrix, positionIntX, positionIntY, direction);
 }
 
 void printMatrix(List<List<String>> matrix) {
+  Console().clearScreen();
   for (var i = 0; i < matrix.length; i++) {
     print(matrix[i]);
   }
 }
 
-final Console console = Console();
-final throttler = Throttler(milliseconds: 100);
 
-// void drawMatrix(
-//     List<List<String>> matrix, int posX, int posY, String direction) {
-//   console.clearScreen();
-//   console.cursorPosition = Coordinate(0, 0);
-
-//   for (int y = 0; y < matrix.length; y++) {
-//     for (int x = 0; x < matrix[y].length; x++) {
-//       if (x == posX && y == posY) {
-//         console.setForegroundColor(ConsoleColor.brightGreen);
-//         console.write(direction);
-//       } else if (matrix[y][x] == '#') {
-//         console.setForegroundColor(ConsoleColor.red);
-//         console.write('#');
-//       } else if (matrix[y][x] == 'X') {
-//         console.setForegroundColor(ConsoleColor.brightYellow);
-//         console.write('X');
-//       } else {
-//         console.resetColorAttributes();
-//         console.write('.');
-//       }
-//     }
-//     console.writeLine();
-//   }
-// }
-
-void drawMatrix(
-    List<List<String>> matrix, int posX, int posY, String direction) {
-  final buffer = StringBuffer();
-
-  // Build the matrix in memory
-  for (int y = 0; y < matrix.length; y++) {
-    for (int x = 0; x < matrix[y].length; x++) {
-      if (x == posX && y == posY) {
-        buffer
-            .write('\x1B[32m$direction\x1B[0m'); // Green for the moving symbol
-      } else if (matrix[y][x] == '#') {
-        buffer.write('\x1B[31m#\x1B[0m'); // Red for obstacles
-      } else if (matrix[y][x] == 'X') {
-        console.setForegroundColor(ConsoleColor.brightYellow);
-        console.write('X');
-      } else {
-        buffer.write('.'); // Default for empty space
-      }
-    }
-    buffer.write('\n');
-  }
-
-  // Move cursor to the top-left and write the buffer
-  console.cursorPosition = Coordinate(0, 0);
-  console.write(buffer.toString());
-}
 
 class XYpoint {
   final int x;
@@ -273,30 +206,3 @@ class XYpoint {
   int get hashCode => x.hashCode ^ y.hashCode;
 }
 
-class Throttler {
-  final int milliseconds;
-
-  int _lastActionTime;
-
-  int get _millisecondsSinceEpoch => DateTime.now().millisecondsSinceEpoch;
-
-  Throttler({required this.milliseconds})
-      : _lastActionTime = DateTime.now().millisecondsSinceEpoch;
-
-  void run(void Function() action) {
-    if (_millisecondsSinceEpoch - _lastActionTime > milliseconds) {
-      action();
-      _lastActionTime = _millisecondsSinceEpoch;
-    }
-  }
-}
-
-// Move the cursor to a specific position (x, y) on the console.
-void moveCursor(int x, int y) {
-  print('\x1B[${y + 1};${x + 1}H');
-}
-
-// Print a single character at the current cursor position.
-void printChar(String char) {
-  stdout.write(char);
-}
