@@ -38,7 +38,6 @@ int fixAndReturnMiddlePart(List<String> orderint, String ruleString) {
   c.sort((a, b) {
     var valueToCheck = "$a|$b";
     var f = ruleString.contains(valueToCheck) ? -1 : 1;
-    // print(c);
     return f;
   });
 
