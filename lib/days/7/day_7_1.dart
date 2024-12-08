@@ -47,7 +47,7 @@ void main() {
     var possiblePermutation = pow(availableOperator.length, equation.length);
     String eqn = '';
     for (var k = 0; k < possiblePermutation; k++) {
-      var bin = k.toRadixString(2);
+      var bin = k.toRadixString(availableOperator.length);
       var binList = bin.split('');
       while (binList.length < equation.length ) {
         binList.insert(0, '0');
