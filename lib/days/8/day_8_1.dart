@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:advent_of_coding/file_reader.dart';
-import 'package:dart_console/dart_console.dart';
 
 void main() {
   var listOfString = readFile('lib/days/8/day_8_1.txt');
@@ -40,7 +39,6 @@ void main() {
         x1 = a.x+ x;
         y1 = a.y + y;
         if (x1 >= 0 && x1 < horizontalLengeth && y1>= 0 && y1 < verticalLength) {
-          // print('x: $x1, y: $y1');
           uniquePoints.add(Point(x1, y1));
         }
       }
@@ -69,9 +67,3 @@ class Point {
 }
 
 
-void printMatrix(List<List<String>> matrix) {
-  Console().clearScreen();
-  for (var i = 0; i < matrix.length; i++) {
-    print(matrix[i]);
-  }
-}
