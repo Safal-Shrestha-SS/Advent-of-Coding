@@ -34,16 +34,19 @@ void main() {
         var y = 0;
         var x1 = 0;
         var y1 = 0;
-       x = a.x - b.x;
+        x = a.x - b.x;
         y = a.y - b.y;
-        x1 = a.x+ x;
+        x1 = a.x + x;
         y1 = a.y + y;
-        if (x1 >= 0 && x1 < horizontalLengeth && y1>= 0 && y1 < verticalLength) {
+        if (x1 >= 0 &&
+            x1 < horizontalLengeth &&
+            y1 >= 0 &&
+            y1 < verticalLength) {
           uniquePoints.add(Point(x1, y1));
         }
       }
     }
-  } 
+  }
   print(uniquePoints.length);
 }
 
@@ -65,5 +68,3 @@ class Point {
   @override
   String toString() => 'Point(x: $x, y: $y)';
 }
-
-
