@@ -89,6 +89,5 @@ int findPath(int x, int y, int currentValue, List<List<int>> grid) {
       path += findPath(newX, newY, currentValue + 1, grid);
     }
   }
-  visited.remove((y, x));
   return path;
 }
