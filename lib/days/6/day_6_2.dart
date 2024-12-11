@@ -167,7 +167,6 @@ bool isStuck(String startDirection, int posX, int posY,
   }
   var loopCount = 0;
   while (true) {
-    // printMatrix(matrix);
     var newPosX = 0;
     var newPosY = 0;
     var newDirection = '';
